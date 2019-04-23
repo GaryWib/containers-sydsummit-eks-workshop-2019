@@ -614,20 +614,17 @@ aws ecr describe-repositories | jq '.repositories[1].repositoryArn'
 </pre>
 </details>
 
+Tag and push your container image to the mono repository.
 
-
-    Tag and push your container image to the monolith repository.
-
-    <pre>
+    
     $ docker tag monolith-service:latest <b><i>ECR_REPOSITORY_URI</i></b>:latest
     $ docker push <b><i>ECR_REPOSITORY_URI</i></b>:latest
-    </pre>
 
-    When you issue the push command, Docker pushes the layers up to ECR.
+When you issue the push command, Docker pushes the layers up to ECR.
 
-    Here's sample output from these commands:
+Here's sample output from these commands:
 
-    <pre>
+<pre>
     $ docker tag monolith-service:latest 873896820536.dkr.ecr.us-east-2.amazonaws.com/mysfit-mono-oa55rnsdnaud:latest
     $ docker push 873896820536.dkr.ecr.us-east-2.amazonaws.com/mysfit-mono-oa55rnsdnaud:latest
     The push refers to a repository [873896820536.dkr.ecr.us-east-2.amazonaws.com/mysfit-mono-oa55rnsdnaud:latest]
@@ -646,13 +643,13 @@ aws ecr describe-repositories | jq '.repositories[1].repositoryArn'
     e6e107f1da2f: Pushed
     c41b9462ea4b: Pushed
     latest: digest: sha256:a27cb7c6ad7a62fccc3d56dfe037581d314bd8bd0d73a9a8106d979ac54b76ca size: 3252
-    </pre>
+</pre>
 
-    *Note: Typically, you'd have to log into your ECR repo. However, you did not need to authenticate docker with ECR because the [Amazon ECR Credential Helper](https://github.com/awslabs/amazon-ecr-credential-helper) has been installed and configured for you on the Cloud9 Environment.  This was done earlier when you ran the setup script. You can read more about the credentials helper in this [article](https://aws.amazon.com/blogs/compute/authenticating-amazon-ecr-repositories-for-docker-cli-with-credential-helper/).*
+*Note: Typically, you'd have to log into your ECR repo. However, you did not need to authenticate docker with ECR because the [Amazon ECR Credential Helper](https://github.com/awslabs/amazon-ecr-credential-helper) has been installed and configured for you on the Cloud9 Environment.  This was done earlier when you ran the setup script. You can read more about the credentials helper in this [article](https://aws.amazon.com/blogs/compute/authenticating-amazon-ecr-repositories-for-docker-cli-with-credential-helper/).*
 
-    If you refresh the ECR repository page in the console, you'll see a new image uploaded and tagged as latest.
+If you refresh the ECR repository page in the console, you'll see a new image uploaded and tagged as latest.
 
-    ![ECR push complete](images/01-ecr-push-complete.png)
+![ECR push complete](images/01-ecr-push-complete.png)
 
 ### Checkpoint:
 At this point, you should have a working container for the monolith codebase stored in an ECR repository and ready to deploy with EKS in the next lab.
