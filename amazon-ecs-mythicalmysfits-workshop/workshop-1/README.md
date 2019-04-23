@@ -651,22 +651,23 @@ This is really important because if you leave stuff running in your account, it 
 
 Delete manually created resources throughout the labs:
 
-* EKS service(s)
+1. Delete EKS service(s)
 
-kubectl delete -f Kubernetes/likeservice-app.yaml
-kubectl delete -f Kubernetes/nolikeservice-app.yaml
-kubectl delete -f Kubernetes/mythical-ingress.yaml
-(if you created the dashboard) kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+    * kubectl delete -f Kubernetes/likeservice-app.yaml
+    * kubectl delete -f Kubernetes/nolikeservice-app.yaml
+    * kubectl delete -f Kubernetes/mythical-ingress.yaml
+    (if you created the dashboard) kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
 
 
-* any roles that you created
-* ECR - delete any Docker images pushed to your ECR repository.
-* CloudWatch logs groups
-* ALBs and associated target groups (if they didn't get deleted when you deleted the service)
-* check DRIFT on your CF stack before you delete and resolve. 
-* eksctl delete cluster --name=mysticalmysfits
+2. Delete Docker images pushed to your ECR repository
+3. Delete S3 buckets with Mythical Mysifts assets
+4. Delete ALBs and associated target groups (if they didn't get deleted when you deleted the service)
+5. Delete CloudWatch log groups
+6. Delete Kubernetes cluster
+    * eksctl delete cluster --name=mysticalmysfits
 
-The nodegroup will have to complete the deletion process before the EKS cluster can be deleted. The total process will take approximately 15 minutes, and can be monitored via the CloudFormation Console
+    The nodegroup will have to complete the deletion process before the EKS cluster can be deleted. The total process will take approximately 15 minutes, and can be monitored via the CloudFormation Console
 
-Finally, [delete the CloudFormation stack](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-delete-stack.html) launched at the beginning of the workshop to clean up the rest.  If the stack deletion process encountered errors, look at the Events tab in the CloudFormation dashboard, and you'll see what steps failed.  It might just be a case where you need to clean up a manually created asset that is tied to a resource goverened by CloudFormation. You can also use the "Drift" detection feature in Cloudformation to figure out what has drifted from the configuration once you started. 
+7. [Delete the CloudFormation stack](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-delete-stack.html) launched at the beginning of the workshop to clean up the rest.  If the stack deletion process encountered errors, look at the Events tab in the CloudFormation dashboard, and you'll see what steps failed.  It might just be a case where you need to clean up a manually created asset that is tied to a resource goverened by CloudFormation. You can also use the "Drift" detection feature in Cloudformation to figure out what has drifted from the configuration once you started. 
 
+8. Finally, delete any IAM roles that were created during the lab.
