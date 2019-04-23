@@ -215,7 +215,7 @@ If the *Arn* contains `TeamRole`, `MasterRole`, or does not match the role name,
 ```
 
 ### Checkpoint:
-At this point, the Mythical Mysfits website should be available at the static site endpoint for the S3 bucket created by CloudFormation. You can visit the site at <code>http://<b><i>BUCKET_NAME</i></b>.s3-website.us-west-2.amazonaws.com/</code>. You can find the ***BUCKET_NAME*** in the CloudFormation outputs saved in the file `workshop-1/cfn-outputs.json`. Check that you can view the site, but there won't be much content visible yet until we launch the Mythical Mysfits monolith service:
+At this point, the Mythical Mysfits website should be available at the static site endpoint for the S3 bucket created by CloudFormation. You can visit the site at <code>http://<b><i>BUCKET_NAME</i></b>.s3-website.us-west-2.amazonaws.com/</code>. You can find the ***BUCKET_NAME*** in the CloudFormation outputs saved in the file `workshop-1/cfn-outputs.json`. Or you can issue the command `aws s3 ls` and get the name of the S3 bucket. Check that you can view the site, but there won't be much content visible yet until we launch the Mythical Mysfits monolith service:
 
 ![initial website](images/00-website.png)
 
