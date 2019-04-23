@@ -577,8 +577,7 @@ The Mythical Mysfits adoption agency infrastructure has always been running dire
 
     Here's sample output from the above commands:
 
-    <pre>
-    `
+   `
     $ docker run -d -p 8000:80 -e AWS_DEFAULT_REGION=<us-west-2 -e DDB_TABLE_NAME=Table-mythical-mysfits-eks monolith-service
     51aba5103ab9df25c08c18e9cecf540592dcc67d3393ad192ebeda6e872f8e7a
     $ docker ps
@@ -590,8 +589,7 @@ The Mythical Mysfits adoption agency infrastructure has always been running dire
      * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
     172.17.0.1 - - [16/Nov/2018 22:56:03] "GET /mysfits HTTP/1.1" 200 -
     INFO:werkzeug:172.17.0.1 - - [16/Nov/2018 22:56:03] "GET /mysfits HTTP/1.1" 200 -
-    `
-    </pre>
+   `
 
     In the sample output above, the container was assigned the name "awesome_varahamihira".  Names are arbitrarily assigned.  You can also pass the docker run command a name option if you want to specify the running name.  You can read more about it in the [Docker run reference](https://docs.docker.com/engine/reference/run/).  Kill the container using `docker kill` now that we know it's working properly.
 
