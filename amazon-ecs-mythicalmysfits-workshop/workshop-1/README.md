@@ -477,7 +477,7 @@ The Mythical Mysfits adoption agency infrastructure has always been running dire
     </pre>
     </details>
 
-    To see the benefit of your optimizations, you'll need to first rebuild the monolith image using your new Dockerfile (use the same build command at the beginning of step 2 "docker build -t monolith-service .".  Then, introduce a change in `mythicalMysfitsService.py` (e.g. add another arbitrary comment) and rebuild the monolith image again.  Docker cached the requirements during the first rebuild after the re-ordering and references cache during this second rebuild.  You should see something similar to below:
+    To see the benefit of your optimizations, you'll need to first rebuild the monolith image using your new Dockerfile (use the same build command at the beginning of step 2 `docker build -t monolith-service .`.  Then, introduce a change in `mythicalMysfitsService.py` (e.g. add another arbitrary comment) and rebuild the monolith image again.  Docker cached the requirements during the first rebuild after the re-ordering and references cache during this second rebuild.  You should see something similar to below:
 
     <pre>
     Step 6/11 : RUN pip install -r ./requirements.txt
@@ -512,12 +512,20 @@ The Mythical Mysfits adoption agency infrastructure has always been running dire
 3. Run the docker container and test the adoption agency platform running as a container:
 
     Use the [docker run](https://docs.docker.com/engine/reference/run/) command to run your image; the -p flag is used to map the host listening port to the container listening port.
+    You can get the name of the DDB_TABLE_NAME by issuing the following command (output on my ide is below):
+
+    `aws dynamodb list-tables
+    {
+        "TableNames": [
+            "Table-mythical-mysfits-eks"
+        ]
+    }`
 
     <pre>
     $ docker run -p 8000:80 -e AWS_DEFAULT_REGION=<b><i>us-west-2</i></b> -e DDB_TABLE_NAME=<b><i>TABLE_NAME</i></b> monolith-service
     </pre>
 
-    *Note: You can find your DynamoDB table name in the file `workshop-1/cfn-output.json` derived from the outputs of the CloudFormation stack.*
+    *Note: You can find your DynamoDB table name in the file `workshop-1/cfn-output.json` derived from the outputs of the CloudFormation stack or from the aws cli command given above.*
 
     Here's sample output as the application starts:
 
@@ -570,7 +578,7 @@ The Mythical Mysfits adoption agency infrastructure has always been running dire
     Here's sample output from the above commands:
 
     <pre>
-    $ docker run -d -p 8000:80 -e AWS_DEFAULT_REGION=<b><i>us-west-2</i></b> -e DDB_TABLE_NAME=<b><i>TABLE_NAME</i></b> monolith-service
+    $ docker run -d -p 8000:80 -e AWS_DEFAULT_REGION=<b>us-west-2</b> -e DDB_TABLE_NAME=<b><Table-mythical-mysfits-eks</b> monolith-service
     51aba5103ab9df25c08c18e9cecf540592dcc67d3393ad192ebeda6e872f8e7a
     $ docker ps
     CONTAINER ID        IMAGE                           COMMAND                  CREATED             STATUS              PORTS                  NAMES
@@ -591,11 +599,21 @@ The Mythical Mysfits adoption agency infrastructure has always been running dire
 
     ![ECR repositories](images/01-ecr-repo.png)
 
-    Click on the repository name for the monolith, and note down the Repository URI (you will use this value again in the next lab):
+    Click on the repository name for the **mono**, and note down the Repository URI (you will use this value again in the next lab):
 
     ![ECR monolith repo](images/01-ecr-repo-uri.png)
 
     *Note: Your repository URI will be unique.*
+
+<details>
+<summary>HINT</summary>
+You can also use the AWS CLI command to get the list of ECR Repos. Use the one whih has monolith in the name:
+`aws ecr describe-repositories | jq '.repositories[0].repositoryArn'
+aws ecr describe-repositories | jq '.repositories[1].repositoryArn'
+`
+</details>
+
+
 
     Tag and push your container image to the monolith repository.
 
