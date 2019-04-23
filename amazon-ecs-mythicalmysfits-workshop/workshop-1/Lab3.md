@@ -58,13 +58,9 @@ As with the monolith, you'll be using [EKS](https://aws.amazon.com/eks/) to depl
     $ docker push <b><i>ECR_REPOSITORY_URI</i></b>:like
     </pre>
 
-4. Navigate to Kubernetes/micro folder `/containers-sydsummit-eks-workshop-2019/amazon-ecs-mythicalmysfits-workshop/Kubernetes`. 
+4. Navigate to Kubernetes/micro folder `/containers-sydsummit-eks-workshop-2019/amazon-ecs-mythicalmysfits-workshop/Kubernetes`.  Open the `nolikeservice-app.yaml` file.  Repeat steps 1-4 from [*Lab 2*](Lab2.adoc).
 
-Now, just as in Lab 2, create a new revision of the kubernetes object (this time pointing to the "nolike" version of the container image), AND update the monolith service to use this revision. 
-
-Call this object nolike-app.yaml (there should be a sample file in the folder)
-
-**Note: If you are using the nolike-app.yaml file, remember to update the image file ECR URI and update DDB Table name in the sample file provided.**
+5. Replace the image ENV variable in the `nolikeservice-app.yaml` with the ECR ARN for the "nolike" version of the container image. Then, replace the `DDB_TABLE_NAME` value with your DynamoDB table name.  Update the monolith service to use this revision.
 
 5. Before we deploy this microservice, we'll go into the details of setting up the [ALB Ingress Controller](https://aws.amazon.com/blogs/opensource/kubernetes-ingress-aws-alb-ingress-controller/). 
 
@@ -116,7 +112,7 @@ You may see some errors show up about "target not found". That's because we have
 
 (Example: 07f66c03-default-mythicalm-761d-1712518784.us-west-2.elb.amazonaws.com) and modify the index.html file and upload to s3 again
 ```
-aws s3 cp ../../workshop-1/web/index.html s3://mythical-mysfits-core-mythicalbucket-xxx/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+aws s3 cp ../../workshop-1/web/index.html s3://mythical-mysfits-eks-mythicalbucket-xxx/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
 ```
 ALB can take 5-10 mins to be in-service
 
