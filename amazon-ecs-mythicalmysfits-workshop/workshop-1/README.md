@@ -609,8 +609,8 @@ The Mythical Mysfits adoption agency infrastructure has always been running dire
 <summary>HINT</summary>
 <pre>
 You can also use the AWS CLI command to get the list of ECR Repos. Use the one whih has monolith in the name:
-aws ecr describe-repositories | jq '.repositories[0].repositoryArn'
-aws ecr describe-repositories | jq '.repositories[1].repositoryArn'
+aws ecr describe-repositories | jq '.repositories[0].repositoryUri'
+aws ecr describe-repositories | jq '.repositories[1].repositoryUri'
 </pre>
 </details>
 
