@@ -208,7 +208,7 @@ aws s3 ls
 ```
 Note the bucket name where your index.html file is and copy your new index.html granting read permissions to everyone and full access to you (give your account email)
 ```
-aws s3 cp index.html s3://mythical-mysfits-core-mythicalbucket-xxx/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers full=emailaddress=user@example.com
+aws s3 cp index.html s3://-mythicalbucket-xxx/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers full=emailaddress=user@example.com
 ```
 
 image::images/S3Permissions.png[S3 permissions]
@@ -217,7 +217,7 @@ Note: Your bucket name will be different. If the email address doesn't work, go 
 
 17. now go and see your S3 website, it would have the URL format like: http://BUCKET_NAME.s3-website.us-west-2.amazonaws.com/
 
-For e.g. http://mythical-mysfits-core-mythicalbucket-6b9pvvt40bqj.s3-website.us-west-2.amazonaws.com/
+For e.g. http://mythical-mysfits-eks-mythicalbucket-6b9pvvt40bqj.s3-website.us-west-2.amazonaws.com/
 
 if you see all the mythical mysfits show up now, SUCCESS!! First hurdle done
 

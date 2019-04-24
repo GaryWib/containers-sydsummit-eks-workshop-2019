@@ -58,15 +58,11 @@ As with the monolith, you'll be using [EKS](https://aws.amazon.com/eks/) to depl
     $ docker push <b><i>ECR_REPOSITORY_URI</i></b>:like
     </pre>
 
-4. Navigate to Kubernetes/micro folder `/containers-sydsummit-eks-workshop-2019/amazon-ecs-mythicalmysfits-workshop/Kubernetes`. 
+4. Navigate to Kubernetes/micro folder `/containers-sydsummit-eks-workshop-2019/amazon-ecs-mythicalmysfits-workshop/Kubernetes`.  Open the `nolikeservice-app.yaml` file.  Repeat steps 1-4 from [*Lab 2*](Lab2.adoc).
 
-Now, just as in Lab 2, create a new revision of the kubernetes object (this time pointing to the "nolike" version of the container image), AND update the monolith service to use this revision. 
+5. Replace the image ENV variable in the `nolikeservice-app.yaml` with the ECR ARN for the "nolike" version of the container image. Then, replace the `DDB_TABLE_NAME` value with your DynamoDB table name.  Update the monolith service to use this revision.
 
-Call this object nolike-app.yaml (there should be a sample file in the folder)
-
-**Note: If you are using the nolike-app.yaml file, remember to update the image file ECR URI and update DDB Table name in the sample file provided.**
-
-5. Before we deploy this microservice, we'll go into the details of setting up the [ALB Ingress Controller](https://aws.amazon.com/blogs/opensource/kubernetes-ingress-aws-alb-ingress-controller/). 
+6. Before we deploy this microservice, we'll go into the details of setting up the [ALB Ingress Controller](https://aws.amazon.com/blogs/opensource/kubernetes-ingress-aws-alb-ingress-controller/). 
 
 >Kubernetes Ingress is an api object that allows you manage external (or) internal HTTP[s] access to Kubernetes services running in a cluster. Amazon Elastic Load Balancing Application Load Balancer (ALB) is a popular AWS service that load balances incoming traffic at the application layer (layer 7) across multiple targets, such as Amazon EC2 instances, in a region. ALB supports multiple features including host or path based routing, TLS (Transport layer security) termination, WebSockets, HTTP/2, AWS WAF (web application firewall) integration, integrated access logs, and health checks.
 
@@ -102,64 +98,65 @@ Call this object nolike-app.yaml (there should be a sample file in the folder)
             -------------------------------------------------------------------------------
         ```
 
-6. Still at this point, you'd notice on the console that the ALB has not spun up. Now we'll spin up the ALB giving the path to the two microservices that we have created (like and no like) and then deploy our alb-ingress-controller
+7. Still at this point, you'd notice on the console that the ALB has not spun up. Now we'll spin up the ALB giving the path to the two microservices that we have created (like and no like) and then deploy our alb-ingress-controller
   ```
    kubectl apply -f mythical-ingress.yaml 
    kubectl get ingress/mythical-mysfits-eks
   ```
 
-7. Get the DNS name of the alb (kubectl get ingress) or by issuing:
-```
-kubectl logs -n kube-system $(kubectl get po -n kube-system | egrep -o alb-ingress[a-zA-Z0-9-]+)
-```
-You may see some errors show up about "target not found". That's because we haven't created the backend services yet. Once we create that, you should see the rules and targets created in your ALB.
+8. Get the DNS name of the alb (kubectl get ingress) or by issuing:
+  ```
+  kubectl logs -n kube-system $(kubectl get po -n kube-system | egrep -o alb-ingress[a-zA-Z0-9-]+)
+  ```
+  You may see some errors show up about "target not found". That's because we haven't created the backend services yet. Once we create that, you should see the rules and targets created in your ALB.
 
-(Example: 07f66c03-default-mythicalm-761d-1712518784.us-west-2.elb.amazonaws.com) and modify the index.html file and upload to s3 again
-```
-aws s3 cp ../../workshop-1/web/index.html s3://mythical-mysfits-core-mythicalbucket-xxx/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
-```
-ALB can take 5-10 mins to be in-service
+  (Example: 07f66c03-default-mythicalm-761d-1712518784.us-west-2.elb.amazonaws.com) and modify the index.html file and upload to s3 again
+  ```
+  aws s3 cp ../../workshop-1/web/index.html s3://mythical-mysfits-eks-mythicalbucket-xxx/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+  ```
+  ALB can take 5-10 mins to be in-service
 
-8. Take the ALB DNS name and pass it in as environment variable in the *likeservice-app.yaml* file. Again make sure all the other env variables are correct too. Also make sure your nolikeservice-app.yaml file also has the correct ECR ARN and correct DynamoDB name
-```
-- name: mythical-mysfits-like
-          image: PUT_YOUR_LIKE_IMAGE_ECR_ARN
--  env:
-            - name: DDB_TABLE_NAME
-              value: PUT_YOUR_DYNAMODB_TABLENAME
-            - name: AWS_DEFAULT_REGION
-              value: us-west-2
-            - name: MONOLITH_URL
-              value: SAMPLE.us-west-2.elb.amazonaws.com (your ALB name would be different)
+9. Take the ALB DNS name and pass it in as environment variable in the *likeservice-app.yaml* file. Again make sure all the other env variables are correct too. Also make sure your nolikeservice-app.yaml file also has the correct ECR ARN and correct DynamoDB name
+  ```
+  - name: mythical-mysfits-like
+            image: PUT_YOUR_LIKE_IMAGE_ECR_ARN
+  -  env:
+              - name: DDB_TABLE_NAME
+                value: PUT_YOUR_DYNAMODB_TABLENAME
+              - name: AWS_DEFAULT_REGION
+                value: us-west-2
+              - name: MONOLITH_URL
+                value: SAMPLE.us-west-2.elb.amazonaws.com (your ALB name would be different)
 
-```
-**MAKE SURE YOUR DynamoDB table name and your ECR Repos are also pointing to the correct locations in both your likeservice-app.yaml and nolikeservice-app.yaml files**
+  ```
+  **MAKE SURE YOUR DynamoDB table name and your ECR Repos are also pointing to the correct locations in both your likeservice-app.yaml and nolikeservice-app.yaml files**
 
-9. Now deploy both the "like" and "nolike" services. 
+10. Now deploy both the "like" and "nolike" services. 
 ```
 kubectl apply -f likeservice-app.yaml 
 kubectl apply -f nolikeservice-app.yaml
 ```
 
-10. Check your ALB on the console, it will take another 2 minutes or so for these two backend services to show as "healthy" in the target group. 
+11. Check your ALB on the console, it will take another 2 minutes or so for these two backend services to show as "healthy" in the target group. 
 
 ![ALB Rules](images/ALBRules.png)
 
 Targest showing Healthy on ALB
 
 ![HealthyTargets](images/HealthyTargets.png)
-11. Once the state of the pods is showing as healthy, open the log files to each of the pods:
+
+12. Once the state of the pods is showing as healthy, open the log files to each of the pods:
 ```
 kubectl get pods
 kubectl logs <pod name 1> (there should be 4 pods)
 ```
-12. Navigate to the S3 URL and press the like button, you may see the POST with a success of 200 show up and with the message "Like processed." I said you "may" because due to the healthcheck, logs are quite verbose. In the next lab, when we configure CloudWatch with fluentd, you would be able to search for the text in the log groups that are generated. 
+13. Navigate to the S3 URL and press the like button, you may see the POST with a success of 200 show up and with the message "Like processed." I said you "may" because due to the healthcheck, logs are quite verbose. In the next lab, when we configure CloudWatch with fluentd, you would be able to search for the text in the log groups that are generated. 
 
-13. If you have time, you can now remove the old like endpoint from the monolith now that it is no longer seeing production use.
+14. If you have time, you can now remove the old like endpoint from the monolith now that it is no longer seeing production use.
 
     Go back to your Cloud9 environment where you built the monolith and like service container images.
 
-    In the monolith folder, open mythicalMysfitsService.py in the Cloud9 editor and find the code that reads:
+    In the monolith folder, open `mythicalMysfitsService.py` in the Cloud9 editor and find the code that reads:
 
     ```
     # increment the number of likes for the provided mysfit.
